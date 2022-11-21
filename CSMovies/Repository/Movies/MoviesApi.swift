@@ -22,8 +22,10 @@ class MoviesApi: MoviesApiProtocol {
             "page": String(page)
         ]
         
-        let call = apiRequest.APICall(method: .get, urlPath: "now_playing", parameters: params).map { data in
-            return MoviesApiParse.parseNowPlayingMovies(json: data)
+        let call = apiRequest.ApiRequest(method: .get, urlPath: "now_playing", parameters: params).flatMap { [weak self] data -> Observable<NowPlayingMovies> in
+            guard let self = self else { return Observable.empty() }
+            let json = self.apiRequest.convertDataToJSON(with: data)
+            return Observable.just(MoviesApiParse.parseNowPlayingMovies(json: json))
         }
         
         return call

@@ -11,14 +11,23 @@ import SwiftyJSON
 
 class ApiRequest {
     private let baseURL = "https://api.themoviedb.org/3/movie/"
+    private let imageBaseURL = "https://image.tmdb.org/t/p/w500"
     private let apiKey = "556260fab287adbcca1308d5498cff79"
     
-    func APICall(method: HttpMethod, urlPath: String, parameters: [String: Any]? = nil) -> Observable<JSON> {
+    func ImageApiRequest(urlPath: String, method: HttpMethod) -> Observable<Data> {
+        guard let request = APIRequest(url: imageBaseURL + urlPath, method: method) else { return Observable.empty()}
+        return APICall(request: request)
+    }
+    
+    func ApiRequest(method: HttpMethod, urlPath: String, parameters: [String: Any]? = nil) -> Observable<Data> {
+        guard let request = APIRequest(url: baseURL + urlPath, method: method, parameters: parameters) else { return Observable.empty() }
+        return APICall(request: request)
+    }
+    
+    private func APICall(request: URLRequest) -> Observable<Data> {
         let defaultSession = URLSession(configuration: URLSessionConfiguration.default)
         
-        return Observable.create { [weak self] observer in
-            guard let self = self, let request = self.APIRequest(url: self.baseURL + urlPath, method: method, parameters: parameters) else { return Disposables.create() }
-            
+        return Observable.create {observer in
             let task = defaultSession.dataTask(with: request) { (data, response, error) in
                 guard let data = data, error == nil else {
                     observer.onError(error ?? NSError())
@@ -27,8 +36,7 @@ class ApiRequest {
                 }
                 
                 if let response = response as? HTTPURLResponse, 200 ... 299 ~= response.statusCode {
-                    let json = self.convertDataToJSON(with: data)
-                    observer.onNext(json)
+                    observer.onNext(data)
                 } else {
                     observer.onError(error ?? NSError())
                 }
@@ -72,13 +80,13 @@ class ApiRequest {
         return urlComponents
     }
     
-    private func convertDataToJSON(with data: Data) -> JSON {
+    func convertDataToJSON(with data: Data) -> JSON {
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
             let json = JSON(jsonObject)
             return json
         } catch {
-            debugPrint("Erro parse JSON = \(error)")
+            debugPrint("JSON Error = \(error)")
             return JSON()
         }
     }

@@ -27,10 +27,7 @@ public struct MoviesApiParse {
                 var movieResponse = Movie()
                 movieResponse.idMovie = movie["id"].intValue
                 movieResponse.movieTitle = movie["title"].stringValue
-                
-                let date = DateFormatterUtil().convertDateFormat(stringDate: movie["release_date"].stringValue)
-                
-                movieResponse.releaseDate = date
+                movieResponse.releaseDate = movie["release_date"].stringValue.convertDateToBRFormat()
                 movieResponse.overview = movie["overview"].stringValue
                 movieResponse.imageUrl = movie["poster_path"].stringValue
                 

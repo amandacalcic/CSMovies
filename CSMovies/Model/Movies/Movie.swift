@@ -9,9 +9,9 @@ import Foundation
 
 public struct Movie {
     public var idMovie: Int = 0
-    public var movieTitle: String = ""
-    public var releaseDate: String? = ""
-    public var overview: String = ""
-    public var imageUrl: String = ""
-    public var image: Data? = Data()
+    public var movieTitle: String?
+    public var releaseDate: String?
+    public var overview: String?
+    public var imageUrl: String?
+    public var image: Data?
 }
