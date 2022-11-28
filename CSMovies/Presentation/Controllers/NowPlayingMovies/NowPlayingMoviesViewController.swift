@@ -15,7 +15,7 @@ class NowPlayingMoviesViewController: UIViewController {
     private lazy var moviesTableView: UITableView = {
         var tableView = UITableView()
         tableView.register(NowPlayingMoviesViewCell.self, forCellReuseIdentifier: NowPlayingMoviesViewCell.identifier)
-        tableView.backgroundColor = .systemGray6
+        tableView.backgroundColor = .lightBackground
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         return tableView
@@ -42,24 +42,17 @@ class NowPlayingMoviesViewController: UIViewController {
     }
     
     private func setup() {
-        viewModel.getNowPlayingMovies().observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.moviesTableView.reloadData()
-        }).disposed(by: disposeBag)
+        getNowPLayingMovies()
     }
     
     private func setupUI() {
         title = "Novos Lançamentos"
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .lightBackground
         
         moviesTableView.dataSource = self
         moviesTableView.delegate = self
         
         setupTableViewConstraints()
-    }
-    
-    private func setuoNavigationBar() {
-        
     }
     
     private func setupTableViewConstraints() {
@@ -70,6 +63,13 @@ class NowPlayingMoviesViewController: UIViewController {
             leading: (anchor: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
             trailing: (anchor: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
             bottom: (anchor: view.safeAreaLayoutGuide.bottomAnchor, constant: 0))
+    }
+    
+    private func getNowPLayingMovies() {
+        viewModel.getNowPlayingMovies().observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.moviesTableView.reloadData()
+        }).disposed(by: disposeBag)
     }
 }
 

@@ -17,7 +17,7 @@ class NowPlayingMoviesViewCell: UITableViewCell {
     
     private lazy var movieImageView: UIImageView = {
         var image = UIImageView()
-        image.layer.cornerRadius = 20
+        image.layer.cornerRadius = 15
         image.contentMode = .scaleAspectFit
         image.clipsToBounds = true
         return image
@@ -27,6 +27,7 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         var label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .bold)
         label.numberOfLines = 0
+        label.textColor = .darkTextColor
         return label
     }()
     
@@ -36,6 +37,7 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         label.sizeToFit()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+        label.textColor = .darkTextColor
         return label
     }()
     
@@ -43,12 +45,14 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         var label = UILabel()
         label.text = "Lançamento: "
         label.font = .systemFont(ofSize: 14)
+        label.textColor = .darkTextColor
         return label
     }()
     
     private lazy var releaseDateLabel: UILabel = {
         var label = UILabel()
         label.font = .systemFont(ofSize: 14)
+        label.textColor = .darkTextColor
         return label
     }()
     
@@ -58,7 +62,7 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         self.overview = movie.overview
         self.releaseDate = movie.releaseDate
         
-        contentView.backgroundColor = .systemGray6
+        contentView.backgroundColor = .lightBackground
         
         setupImage()
         setupTitle()
