@@ -90,4 +90,14 @@ extension NowPlayingMoviesViewController: UITableViewDataSource, UITableViewDele
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = viewModel.movies[indexPath.row]
+        
+        let vc = MovieDetailViewController()
+        
+        let navigation = UINavigationController(rootViewController: vc)
+        vc.startup(movie: movie)
+        present(navigation, animated: true, completion: nil)
+    }
 }

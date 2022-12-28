@@ -1,17 +1,16 @@
 //
-//  NowPlayingMoviesViewCell.swift
+//  MovieDetailViewController.swift
 //  CSMovies
 //
-//  Created by Amanda Calcic on 16/11/22.
+//  Created by Amanda Calcic on 12/12/22.
 //
 
 import UIKit
 
-class NowPlayingMoviesViewCell: UITableViewCell {
-    static let identifier = "nowPlayingMoviesCell"
-    
+class MovieDetailViewController: UIViewController {
     private var imageData: Data?
-    private var title: String?
+    private var movieTitle: String?
+    private var overview: String?
     private var releaseDate: String?
     
     private lazy var movieImageView: UIImageView = {
@@ -26,6 +25,16 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         var label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .bold)
         label.numberOfLines = 0
+        label.textColor = .darkTextColor
+        return label
+    }()
+    
+    private lazy var overviewLabel: UILabel = {
+        var label = UILabel()
+        label.font = .systemFont(ofSize: 14)
+        label.sizeToFit()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.textColor = .darkTextColor
         return label
     }()
@@ -45,15 +54,25 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         return label
     }()
     
-    func setup(movie: Movie) {
+    //MARK: - init
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = .lightBackground
+    }
+    
+    func startup(movie: Movie) {
         self.imageData = movie.image
-        self.title = movie.movieTitle
+        self.movieTitle = movie.movieTitle
+        self.overview = movie.overview
         self.releaseDate = movie.releaseDate
-        
-        contentView.backgroundColor = .lightBackground
         
         setupImage()
         setupTitle()
+        setupOverview()
         setupReleaseDate()
     }
     
@@ -62,26 +81,38 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         
         movieImageView.image = UIImage(data: imageData)
         
-        contentView.addSubview(movieImageView)
+        view.addSubview(movieImageView)
         
         movieImageView.setupAnchor(
-            top: (contentView.topAnchor, 20),
-            left: (contentView.leftAnchor, 20),
-            bottom: (contentView.bottomAnchor, 20),
-            width: 130,
-            height: 100)
+            top: (view.topAnchor, 10),
+            left: (view.leftAnchor, 10),
+            right: (view.rightAnchor, 10),
+            height: 400)
     }
     
     private func setupTitle() {
-        guard let title = title else { return }
+        guard let movieTitle = movieTitle else { return }
         
-        titleLabel.text = title
+        titleLabel.text = movieTitle
         
-        contentView.addSubview(titleLabel)
+        view.addSubview(titleLabel)
         titleLabel.setupAnchor(
-            top: (movieImageView.topAnchor, 10),
-            left:(movieImageView.rightAnchor, 10),
-            right: (contentView.rightAnchor, 20)
+            top: (movieImageView.bottomAnchor, 20),
+            left:(view.leftAnchor, 20),
+            right: (view.rightAnchor, 20)
+        )
+    }
+    
+    private func setupOverview() {
+        guard let overview = overview else { return }
+        
+        overviewLabel.text = overview
+        
+        view.addSubview(overviewLabel)
+        overviewLabel.setupAnchor(
+            top: (titleLabel.bottomAnchor, 15),
+            left: (view.leftAnchor, 20),
+            right: (view.rightAnchor, 20)
         )
     }
     
@@ -90,12 +121,12 @@ class NowPlayingMoviesViewCell: UITableViewCell {
         
         releaseDateLabel.text = releaseDate
         
-        contentView.addSubview(titleReleaseDateLabel)
-        contentView.addSubview(releaseDateLabel)
+        view.addSubview(titleReleaseDateLabel)
+        view.addSubview(releaseDateLabel)
         
         titleReleaseDateLabel.setupAnchor(
-            top: (titleLabel.bottomAnchor, 5),
-            left: (titleLabel.leftAnchor, 0)
+            top: (overviewLabel.bottomAnchor, 10),
+            left: (view.leftAnchor, 20)
         )
         
         releaseDateLabel.setupAnchor(
